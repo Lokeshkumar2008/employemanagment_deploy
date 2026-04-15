@@ -1,0 +1,172 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Edit Employee</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* NAVBAR */
+.navbar {
+    background: #e5e7eb;
+    padding: 10px 20px;
+}
+
+.logo {
+    width: 50px;
+    border-radius: 50%;
+}
+
+.nav-title {
+    font-size: 20px;
+    font-weight: 600;
+    margin-left: 10px;
+}
+
+.navbar a {
+    color: blue;
+    text-decoration: none;
+}
+
+/* FLASH */
+.flash-box {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 350px;
+    z-index: 9999;
+}
+
+/* BACKGROUND */
+.main-section {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: linear-gradient(rgba(90, 90, 200, 0.7), rgba(90, 90, 200, 0.7)),
+    url("https://w0.peakpx.com/wallpaper/795/959/HD-wallpaper-best-web-development-company-in-lucknow-web-developer-web-design-web-application-web-development.jpg");
+
+    background-size: cover;
+}
+
+/* CARD */
+.register-card {
+    width: 360px;
+    padding: 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(15px);
+    color: white;
+}
+
+/* INPUT */
+.form-control {
+    border-radius: 10px;
+    margin-bottom: 15px;
+}
+
+/* BUTTON */
+.btn-register {
+    background: linear-gradient(135deg, #00c6ff, #0072ff);
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    color: white;
+    width: 100%;
+}
+
+/* FOOTER */
+footer {
+    background: #e5e7eb;
+    text-align: center;
+    padding: 10px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar d-flex justify-content-between align-items-center">
+
+<div class="d-flex align-items-center">
+    <img class="logo" src="https://static.vecteezy.com/system/resources/previews/020/859/601/non_2x/employee-management-icon-design-free-vector.jpg">
+    <span class="nav-title">EMPLOYEE MANAGEMENT SYSTEM</span>
+</div>
+
+<div>
+    <a href="/view" class="me-3">Dashboard</a>
+    <a href="/logout">Logout</a>
+</div>
+
+
+</div>
+
+<!-- FLASH -->
+
+<div class="flash-box">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% for category, message in messages %}
+    <div class="alert alert-{{category}} alert-dismissible fade show">
+      {{ message }}
+      <button class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+{% endwith %}
+</div>
+
+<!-- MAIN -->
+
+<div class="main-section">
+
+
+<div class="register-card">
+
+    <h3>Edit Employee</h3>
+
+    <form method="post">
+
+        <input type="text" class="form-control" name="eid" value="{{ emp[0] }}" readonly>
+
+        <input type="text" class="form-control" name="ename" value="{{ emp[1] }}" required>
+
+        <input type="text" class="form-control" name="edept" value="{{ emp[2] }}" required>
+
+        <input type="number" class="form-control" name="esalary" value="{{ emp[3] }}" required>
+
+        <input type="text" class="form-control" name="ephone" value="{{ emp[4] }}" required>
+
+        <button class="btn-register">Update</button>
+
+    </form>
+
+</div>
+```
+
+</div>
+
+<!-- FOOTER -->
+
+<footer>
+    © 2026 Employee Management System
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

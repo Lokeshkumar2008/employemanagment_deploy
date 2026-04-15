@@ -1,0 +1,182 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', sans-serif;
+
+    background:
+        linear-gradient(rgba(78,84,200,0.7), rgba(143,148,251,0.7)),
+        url("https://w0.peakpx.com/wallpaper/795/959/HD-wallpaper-best-web-development-company-in-lucknow-web-developer-web-design-web-application-web-development.jpg");
+
+    background-size: cover;
+    background-position: center;
+}
+
+/* NAVBAR */
+.navbar {
+    background: rgba(255,255,255,0.9);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 10px 20px;
+}
+
+.navbar h2 {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+/* NAV LINKS */
+.navbar .ms-auto {
+    display: flex;
+    gap: 25px;
+    align-items: center;
+}
+
+.navbar .ms-auto a {
+    text-decoration: none;
+    color: #333;
+    font-weight: 500;
+}
+
+/* LOGIN CARD */
+.register {
+    width: 90%;
+    max-width: 380px;
+    margin: auto;
+    margin-top: 60px;
+    padding: 35px;
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(18px);
+    border: 1px solid rgba(255,255,255,0.3);
+
+    box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    text-align: center;
+    color: white;
+}
+
+.register h2 {
+    margin-bottom: 25px;
+}
+
+/* INPUT */
+.from-feild input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    margin-bottom: 15px;
+}
+
+/* BUTTON */
+.bun {
+    width: 100%;
+    padding: 12px;
+    background: linear-gradient(to right, #00c6ff, #0072ff);
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+/* FLASH */
+.alert {
+    max-width: 400px;
+    margin: auto;
+}
+
+/* FOOTER */
+footer {
+    margin-top: auto;
+    background: rgba(255,255,255,0.9);
+    text-align: center;
+    padding: 12px;
+}
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav class="navbar">
+    <div class="container-fluid">
+        <img src="https://static.vecteezy.com/system/resources/previews/020/859/601/non_2x/employee-management-icon-design-free-vector.jpg" width="50">
+
+
+    <h2 class="ms-2">EMPLOYEE MANAGEMENT SYSTEM</h2>
+
+    <div class="ms-auto">
+        <a href="#">Home</a>
+        <a href="/about">About</a>
+        <a href="/contact">Contact</a>
+    </div>
+</div>
+
+
+</nav>
+
+<!-- 🔥 FLASH MESSAGES -->
+
+<div class="container mt-3">
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, message in messages %}
+      <div class="alert alert-{{category}} alert-dismissible fade show text-center">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+</div>
+
+<!-- LOGIN FORM -->
+
+<form class="register" action="/login" method="post">
+    <h2>Admin Login</h2>
+
+
+<div class="from-feild">
+    <input type="text" name="username" placeholder="Enter username" required>
+</div>
+
+<div class="from-feild">
+    <input type="password" name="password" placeholder="Enter password" required>
+</div>
+
+<button class="bun">Login</button>
+
+<p>No account? Register</p>
+<a href="/forgot">Forgot Password</a>
+<a href="/register">New Admin? Register</a>
+
+
+</form>
+
+<!-- FOOTER -->
+
+<footer>
+    © 2026 Employee Management System
+</footer>
+
+<!-- JS -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
