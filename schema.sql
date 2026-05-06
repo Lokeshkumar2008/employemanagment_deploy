@@ -16,6 +16,12 @@ CREATE TABLE IF NOT EXISTS employee (
     esalary INTEGER,
     ephone TEXT
 );
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    username TEXT,
+    email TEXT,
+    password TEXT
+);
 
 -- INSERT USER
 INSERT INTO users (username, password, role)
