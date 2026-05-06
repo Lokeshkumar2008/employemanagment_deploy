@@ -1,117 +1,151 @@
-<!DOCTYPE html>
+{% extends "base.html" %}
 
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Reset Password</title>
+{% block title %}Reset Password{% endblock %}
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% block extra_css %}
+
+<!-- ICON CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 
 <style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: #f4f6f9;
+
+/* REMOVE GAP */
+main {
+    padding: 0 !important;
+}
+
+/* CENTER */
+.reset-wrapper {
+    min-height: calc(100vh - 76px);
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
-}
-
-/* FLASH */
-.flash-box {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 350px;
-    z-index: 9999;
+    padding: 20px;
 }
 
 /* CARD */
-.box {
-    background: #ffffff;
+.reset-card {
+    width: 100%;
+    max-width: 400px;
+    background: white;
     padding: 30px;
-    width: 320px;
-    border-radius: 12px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    border-radius: 16px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
     text-align: center;
 }
 
-h2 {
+/* ICON */
+.icon-box {
+    width: 60px;
+    height: 60px;
+    background: #ede9fe;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    font-size: 26px;
+    color: #4f46e5;
+}
+
+/* TEXT */
+.title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-top: 10px;
+}
+
+.subtitle {
+    font-size: 13px;
+    color: #6b7280;
     margin-bottom: 20px;
 }
 
 /* INPUT */
-input {
+.input-wrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.input-wrapper i {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+.input-wrapper input {
     width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border-radius: 6px;
-    border: 1px solid #ccc;
+    padding: 12px 12px 12px 40px;
+    border-radius: 10px;
+    border: 2px solid #e5e7eb;
 }
 
 /* BUTTON */
-button {
+.btn-save {
     width: 100%;
-    padding: 10px;
-    background: #4a90e2;
+    padding: 12px;
+    border-radius: 10px;
     border: none;
-    border-radius: 6px;
+    background: linear-gradient(135deg,#4f46e5,#6366f1);
     color: white;
-    cursor: pointer;
+    font-weight: bold;
 }
 
-/* NOTE */
-.note {
-    font-size: 12px;
-    color: #777;
-    margin-top: 10px;
+/* LINK */
+.links a {
+    text-decoration: none;
+    color: #4f46e5;
+    font-size: 13px;
 }
+
+/* MOBILE */
+@media(max-width:768px){
+    .reset-card {
+        padding: 20px;
+    }
+}
+
 </style>
+{% endblock %}
 
-</head>
+{% block content %}
 
-<body>
+<div class="reset-wrapper">
 
-<!-- 🔥 FLASH -->
+    <div class="reset-card">
 
-<div class="flash-box">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, msg in messages %}
-    <div class="alert alert-{{category}} alert-dismissible fade show">
-      {{ msg }}
-      <button class="btn-close" data-bs-dismiss="alert"></button>
+        <!-- ICON -->
+        <div class="icon-box">
+            <i class="bi bi-key"></i>
+        </div>
+
+        <!-- TITLE -->
+        <div class="title">Reset Password</div>
+        <div class="subtitle">
+            Enter your new password below
+        </div>
+
+        <!-- FORM -->
+        <form method="POST">
+
+            <div class="input-wrapper">
+                <i class="bi bi-lock"></i>
+                <input type="password" name="password" placeholder="New Password" required>
+            </div>
+
+            <button class="btn-save">Save Password</button>
+
+        </form>
+
+        <!-- LINK -->
+        <div class="links mt-3">
+            <a href="/login">← Back to Login</a>
+        </div>
+
     </div>
-  {% endfor %}
-{% endwith %}
-</div>
-
-<!-- FORM -->
-
-<div class="box">
-    <h2>Reset Password</h2>
-
-
-<form method="POST" action="/reset">
-
-    <input type="password" name="password" placeholder="New Password" required>
-
-    <input type="password" name="confirm" placeholder="Confirm Password" required>
-
-    <button type="submit">Reset</button>
-
-</form>
-
-<div class="note">
-    Make sure your password is strong.
-</div>
-
 
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+{% endblock %}

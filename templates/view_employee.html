@@ -1,152 +1,319 @@
-<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% extends 'base.html' %}
 
-<title>View Employees</title>
+{% block title %}Employee Directory - Employee Management System{% endblock %}
 
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+{% block extra_css %}
 <style>
-body {
-    margin: 0;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-}
+    .dashboard-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px 15px 60px;
+    }
 
-.navbar {
-    display: flex;
-    align-items: center;
-    padding: 10px 20px;
-    background: #e5e7eb;
-}
+    .table-card {
+        background: #ffffff;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        border: 1px solid rgba(226, 232, 240, 0.8);
+        overflow: hidden;
+    }
 
-.logo {
-    width: 50px;
-    border-radius: 50%;
-}
+    .table-header {
+        padding: 25px 30px;
+        border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        background: #f8fafc;
+    }
 
-.nav-title {
-    font-size: 20px;
-    font-weight: 600;
-    margin-left: 10px;
-}
+    .table-title {
+        font-weight: 700;
+        color: var(--secondary-color);
+        font-size: 1.4rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
 
-.search-form {
-    width: 40%;
-}
+    .search-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
 
-.main-section {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    .search-form {
+        position: relative;
+        width: 300px;
+    }
 
-    background: linear-gradient(rgba(90,90,200,0.7), rgba(90,90,200,0.7)),
-    url("https://w0.peakpx.com/wallpaper/795/959/HD-wallpaper-best-web-development-company-in-lucknow-web-developer-web-design-web-application-web-development.jpg");
+    .search-form i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--text-muted);
+    }
 
-    background-size: cover;
-}
+    .search-input {
+        width: 100%;
+        padding: 10px 15px 10px 40px;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
 
-.table-card {
-    width: 90%;
-    max-width: 900px;
-    padding: 25px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
-    color: white;
-}
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
+    .btn-add {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        transition: all 0.2s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
 
-th, td {
-    border: 1px solid rgba(255,255,255,0.4);
-    padding: 10px;
-}
+    .btn-add:hover {
+        background: var(--primary-hover);
+        color: white;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+    }
 
-th {
-    background: rgba(0,0,0,0.4);
-}
+    /* Table Styles */
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+    }
 
-.edit { color: #00ffcc; }
-.delete { color: red; }
+    .custom-table {
+        width: 100%;
+        margin-bottom: 0;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
 
-.footer {
-    background: #e5e7eb;
-    text-align: center;
-    padding: 10px;
-}
+    .custom-table th {
+        background: white;
+        color: var(--text-muted);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        padding: 18px 25px;
+        border-bottom: 2px solid #e2e8f0;
+        white-space: nowrap;
+    }
+
+    .custom-table td {
+        padding: 18px 25px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: var(--secondary-color);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .custom-table tbody tr {
+        transition: background-color 0.2s ease;
+    }
+
+    .custom-table tbody tr:hover {
+        background-color: #f8fafc;
+    }
+
+    .custom-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    /* Avatar Column */
+    .emp-name-cell {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .emp-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: rgba(79, 70, 229, 0.1);
+        color: var(--primary-color);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1rem;
+    }
+
+    /* Department Pill */
+    .dept-pill {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        background: #f1f5f9;
+        color: #475569;
+    }
+
+    /* Actions */
+    .action-links {
+        display: flex;
+        gap: 10px;
+    }
+
+    .btn-action {
+        width: 35px;
+        height: 35px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+
+    .btn-edit {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+    }
+
+    .btn-edit:hover {
+        background: #10b981;
+        color: white;
+    }
+
+    .btn-delete {
+        background: rgba(239, 68, 68, 0.1);
+        color: #ef4444;
+    }
+
+    .btn-delete:hover {
+        background: #ef4444;
+        color: white;
+    }
+    
+    .empty-state {
+        padding: 60px 20px;
+        text-align: center;
+        color: var(--text-muted);
+    }
+    
+    .empty-icon {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .search-form {
+            width: 100%;
+        }
+        .table-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
 </style>
-</head>
+{% endblock %}
 
-<body>
+{% block content %}
+<div class="dashboard-container">
+    <div class="table-card">
+        
+        <!-- Table Header (Search & Add) -->
+        <div class="table-header">
+            <h2 class="table-title">
+                <i class="fa-solid fa-users text-primary"></i> Team Directory
+            </h2>
+            
+            <div class="search-wrapper">
+                <form action="/view" method="get" class="search-form m-0">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" name="query" class="search-input" placeholder="Search by name, dept or phone..." value="{{ request.args.get('query', '') }}">
+                </form>
+                
+                <a href="/add_employee" class="btn-add">
+                    <i class="fa-solid fa-plus"></i> Add Employee
+                </a>
+            </div>
+        </div>
 
-<!-- NAVBAR -->
-<nav class="navbar">
-
-<div class="d-flex align-items-center">
-    <img class="logo" src="https://static.vecteezy.com/system/resources/previews/020/859/601/non_2x/employee-management-icon-design-free-vector.jpg">
-    <span class="nav-title">EMPLOYEE MANAGEMENT SYSTEM</span>
+        <!-- Table Data -->
+        <div class="table-responsive">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th>Employee</th>
+                        <th>ID</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Phone Number</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for e in employyes %}
+                    <tr>
+                        <td>
+                            <div class="emp-name-cell">
+                                <div class="emp-avatar">{{ e[1][:1]|upper }}</div>
+                                <div>
+                                    <div style="font-weight: 700; color: var(--secondary-color);">{{ e[1] }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>#{{ e[0] }}</td>
+                        <td><span class="dept-pill">{{ e[2] }}</span></td>
+                        <!-- Using basic string formatting for salary if float filter acts up -->
+                        <td>${{ e[3] }}</td>
+                        <td>{{ e[4] }}</td>
+                        <td>
+                            <div class="action-links">
+                                <a href="/edit/{{ e[0] }}" class="btn-action btn-edit" title="Edit">
+                                    <i class="fa-solid fa-pen"></i>
+                                </a>
+                                <!-- Using onclick to confirm deletion -->
+                                <a href="/delete/{{ e[0] }}" class="btn-action btn-delete" title="Delete" onclick="return confirm('Are you sure you want to remove {{ e[1] }}? This action cannot be undone.');">
+                                    <i class="fa-solid fa-trash-can"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <div class="empty-icon">
+                                    <i class="fa-solid fa-folder-open"></i>
+                                </div>
+                                <h4>No employees found</h4>
+                                <p>There are no employee records matching your criteria.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+    </div>
 </div>
-
-<!-- 🔥 FIXED SEARCH -->
-<form class="d-flex mx-auto search-form" action="/view" method="get">
-    <input class="form-control me-2" type="search" name="query" placeholder="Search employee..." required>
-    <button class="btn btn-primary">Search</button>
-</form>
-
-<div class="d-flex gap-3">
-    <a href="/add_employee">Add Employee</a>
-    <a href="/logout">Logout</a>
-</div>
-
-</nav>
-
-<!-- MAIN -->
-<div class="main-section">
-
-<div class="table-card">
-
-<h2 class="text-center mb-3">Employee List</h2>
-
-<table>
-<tr>
-<th>ID</th>
-<th>Name</th>
-<th>Department</th>
-<th>Salary</th>
-<th>Phone</th>
-<th>Action</th>
-</tr>
-
-{% for e in employyes %}
-<tr>
-<td>{{e[0]}}</td>
-<td>{{e[1]}}</td>
-<td>{{e[2]}}</td>
-<td>{{e[3]}}</td>
-<td>{{e[4]}}</td>
-<td>
-<a href="/edit/{{e[0]}}" class="edit">Edit</a>
-<a href="/delete/{{e[0]}}" class="delete">Delete</a>
-</td>
-</tr>
-{% endfor %}
-
-</table>
-
-</div>
-</div>
-
-<div class="footer">
-© 2026 Employee Management System
-</div>
-
-</body>
-</html>
+{% endblock %}

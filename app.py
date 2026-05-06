@@ -20,7 +20,7 @@ def get_connection():
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
-    return render_template('dashboard.html')
+    return render_template('login.html')
 
 # ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
@@ -49,59 +49,83 @@ def register():
     return render_template('register.html')
 
 # ---------------- LOGIN ----------------
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def Login():
-    username = request.form['username']
-    password = request.form['password']
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
 
-    con = get_connection()
-    cur = con.cursor()
+        con = get_connection()
+        cur = con.cursor()
 
-    cur.execute(
-        "SELECT * FROM users WHERE username=%s AND password=%s",
-        (username, password)
-    )
-
-    user = cur.fetchone()
-
-    cur.close()
-    con.close()
-
-    if user:
-        session["admin"] = username
-        flash("Login successful!", "success")
-        return redirect('/view')
-    else:
-        flash("Invalid username or password", "danger")
-        return redirect('/')
-
-@app.route('/view')
-def View():
-    if "admin" not in session:
-        flash("Please login first!", "warning")
-        return redirect('/')
-
-    query = request.args.get('query')
-
-    con = get_connection()
-    cur = con.cursor()
-
-    if query:
         cur.execute(
-            "SELECT * FROM employee WHERE ename LIKE %s OR edept LIKE %s OR ephone LIKE %s",
-            ('%' + query + '%', '%' + query + '%', '%' + query + '%')
+            "SELECT * FROM users WHERE username=%s AND password=%s",
+            (username, password)
+        )
+
+        user = cur.fetchone()
+
+        cur.close()
+        con.close()
+
+        if user:
+            session["admin"] = username
+            flash("Login successful!", "success")
+            return redirect('/view')
+        else:
+            flash("Invalid username or password", "danger")
+            return redirect('/login')   # 🔥 FIX HERE ALSO
+
+    return render_template('login.html')   # 🔥 VERY IMPORTANT
+
+#----------------dashboard or view -----------------------
+@app.route('/view')
+def view():
+
+    if "admin" not in session:
+        return redirect('/login')
+
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    # 🔍 SEARCH
+    search = request.args.get('search')
+
+    if search:
+        cursor.execute(
+            "SELECT * FROM employee WHERE ename LIKE %s",
+            ('%' + search + '%',)
         )
     else:
-        cur.execute("SELECT * FROM employee")
+        cursor.execute("SELECT * FROM employee")
 
-    data = cur.fetchall()
+    employees = cursor.fetchall()
 
-    cur.close()
-    con.close()
+    # 🔢 COUNTS (keep these AFTER search or before — both fine)
+    cursor.execute("SELECT COUNT(*) FROM employee")
+    total_employees = cursor.fetchone()[0]
 
-    return render_template('view_employee.html', employyes=data)
+    cursor.execute("SELECT COUNT(DISTINCT edept) FROM employee")
+    total_departments = cursor.fetchone()[0]
 
+    cursor.execute("SELECT AVG(esalary) FROM employee")
+    avg_salary = cursor.fetchone()[0] or 0
+
+    cursor.execute("SELECT SUM(esalary) FROM employee")
+    total_salary = cursor.fetchone()[0] or 0
+    
+    conn.close()
+
+    return render_template(
+        'dashboard.html',
+        employees=employees,
+        total_employees=total_employees,
+        total_departments=total_departments,
+        avg_salary=int(avg_salary),
+        total_salary=total_salary
+    )
 # ---------------- ADD ----------------
+
 @app.route('/add_employee', methods=['GET', 'POST'])
 def Add_employee():
     if "admin" not in session:

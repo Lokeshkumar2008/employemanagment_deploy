@@ -1,160 +1,300 @@
-<!doctype html>
+{% extends 'base.html' %}
 
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}Onboard Employee - Employee Management System{% endblock %}
 
-<title>Add Employee</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+{% block extra_css %}
 <style>
-.navbar img {
-    width: 45px;
-    border-radius: 50%;
-}
+    .onboard-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 150px);
+        padding: 40px 20px;
+    }
 
-body {
-    margin: 0;
-    height: 100vh;
-    background-image: url("https://w0.peakpx.com/wallpaper/795/959/HD-wallpaper-best-web-development-company-in-lucknow-web-developer-web-design-web-application-web-development.jpg");
-    background-size: cover;
-    font-family: 'Segoe UI', sans-serif;
-}
+    .premium-card {
+        background: #ffffff;
+        border-radius: 24px;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.08);
+        display: flex;
+        max-width: 1000px;
+        width: 100%;
+        overflow: hidden;
+        border: 1px solid rgba(226, 232, 240, 0.8);
+    }
 
-/* NAVBAR */
-.navbar {
-    background: rgba(255,255,255,0.1);
-    backdrop-filter: blur(10px);
-}
+    .card-sidebar {
+        background: linear-gradient(135deg, var(--primary-color) 0%, #312e81 100%);
+        color: white;
+        padding: 50px 40px;
+        width: 40%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
 
-.navbar h5 {
-    color: white;
-}
+    /* Decorative circles in sidebar */
+    .card-sidebar::before {
+        content: '';
+        position: absolute;
+        top: -50px;
+        right: -50px;
+        width: 200px;
+        height: 200px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        pointer-events: none;
+    }
+    .card-sidebar::after {
+        content: '';
+        position: absolute;
+        bottom: -80px;
+        left: -50px;
+        width: 250px;
+        height: 250px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 50%;
+        pointer-events: none;
+    }
 
-/* FLASH */
-.flash-box {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 350px;
-    z-index: 9999;
-}
+    .sidebar-icon {
+        font-size: 3rem;
+        background: rgba(255, 255, 255, 0.2);
+        width: 80px;
+        height: 80px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        margin-bottom: 30px;
+        backdrop-filter: blur(5px);
+        position: relative;
+        z-index: 2;
+    }
 
-/* CENTER */
-.wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 85vh;
-}
+    .sidebar-content {
+        position: relative;
+        z-index: 2;
+    }
 
-/* CARD */
-.form-card {
-    width: 380px;
-    padding: 35px;
-    border-radius: 20px;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
-    color: white;
-}
+    .card-form-area {
+        padding: 50px 60px;
+        width: 60%;
+        background: #ffffff;
+    }
 
-/* INPUT */
-.form-control {
-    background: rgba(255,255,255,0.2);
-    border: none;
-    color: white;
-    border-radius: 10px;
-}
+    .form-title {
+        font-weight: 800;
+        color: var(--secondary-color);
+        font-size: 1.8rem;
+        margin-bottom: 10px;
+        letter-spacing: -0.5px;
+    }
 
-/* BUTTON */
-.btn-custom {
-    background: linear-gradient(45deg, #ff7eb3, #ff758c);
-    border: none;
-    border-radius: 10px;
-}
+    .form-subtitle {
+        color: var(--text-muted);
+        margin-bottom: 40px;
+        font-size: 0.95rem;
+    }
 
-/* FOOTER */
-footer {
-    background: #e5e7eb;
-    text-align: center;
-    padding: 10px;
-}
+    /* Custom Input Styling */
+    .form-group-custom {
+        margin-bottom: 25px;
+    }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: block;
+    }
+
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 18px;
+        color: #94a3b8;
+        font-size: 1.1rem;
+        transition: color 0.3s ease;
+    }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 14px 20px 14px 50px;
+        border-radius: 12px;
+        border: 2px solid #e2e8f0;
+        background: #f8fafc;
+        font-size: 1rem;
+        font-weight: 500;
+        color: #0f172a;
+        transition: all 0.3s ease;
+    }
+
+    .form-control-custom:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        background: #ffffff;
+        box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    }
+
+    .form-control-custom:focus + i, 
+    .input-wrapper:focus-within i {
+        color: var(--primary-color);
+    }
+
+    .btn-submit {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 16px;
+        font-weight: 700;
+        font-size: 1.05rem;
+        width: 100%;
+        margin-top: 15px;
+        box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
+        transition: all 0.3s ease;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .btn-submit:hover {
+        background: var(--primary-hover);
+        transform: translateY(-2px);
+        box-shadow: 0 15px 25px rgba(79, 70, 229, 0.3);
+    }
+
+    .tip-list {
+        list-style: none;
+        padding: 0;
+        margin-top: 40px;
+    }
+
+    .tip-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 20px;
+        font-size: 0.9rem;
+        opacity: 0.9;
+        line-height: 1.6;
+    }
+
+    .tip-list i {
+        margin-top: 4px;
+        color: #a5b4fc;
+    }
+
+    /* Responsive */
+    @media (max-width: 992px) {
+        .premium-card {
+            flex-direction: column;
+        }
+        .card-sidebar {
+            width: 100%;
+            padding: 40px 30px;
+        }
+        .card-form-area {
+            width: 100%;
+            padding: 40px 30px;
+        }
+    }
 </style>
+{% endblock %}
 
-</head>
+{% block content %}
+<div class="onboard-wrapper">
+    <div class="premium-card">
+        
+        <!-- Sidebar Panel -->
+        <div class="card-sidebar">
+            <div class="sidebar-icon">
+                <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div class="sidebar-content">
+                <h3 class="fw-bold mb-3" style="font-size: 2rem;">Secure Onboarding</h3>
+                <p style="opacity: 0.85; line-height: 1.7; font-size: 1.05rem;">
+                    Add new team members to the centralized database. Their information is encrypted and securely stored.
+                </p>
+                
+                <ul class="tip-list">
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div><strong>Verify details</strong> before submitting to prevent payroll delays.</div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div><strong>Departments</strong> should match existing organizational structures.</div>
+                    </li>
+                    <li>
+                        <i class="fa-solid fa-check-circle"></i>
+                        <div>All employee records are fully compliant with corporate data policies.</div>
+                    </li>
+                </ul>
+            </div>
+        </div>
 
-<body>
+        <!-- Form Panel -->
+        <div class="card-form-area">
+            <h2 class="form-title">Employee Details</h2>
+            <p class="form-subtitle">Please enter the official information for the new hire.</p>
+            
+            <form method="post" action="/add_employee">
+                
+                <!-- Full Name -->
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Full Legal Name</label>
+                    <div class="input-wrapper">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" class="form-control-custom" name="ename" placeholder="e.g. John Doe" required>
+                    </div>
+                </div>
 
-<!-- NAVBAR -->
+                <!-- Department -->
+                <div class="form-group-custom">
+                    <label class="form-label-custom">Department Allocation</label>
+                    <div class="input-wrapper">
+                        <i class="fa-solid fa-building-user"></i>
+                        <input type="text" class="form-control-custom" name="edept" placeholder="e.g. Engineering, HR, Sales" required>
+                    </div>
+                </div>
 
-<nav class="navbar navbar-expand-lg px-3">
-    <div class="container-fluid">
+                <div class="row g-3">
+                    <!-- Salary -->
+                    <div class="col-md-6 form-group-custom">
+                        <label class="form-label-custom">Annual Salary</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                            <input type="number" class="form-control-custom" name="esalary" placeholder="e.g. 75000" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Phone Number -->
+                    <div class="col-md-6 form-group-custom">
+                        <label class="form-label-custom">Phone Number</label>
+                        <div class="input-wrapper">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="text" class="form-control-custom" name="ephone" placeholder="e.g. +1 234 567 8900" required>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Submit -->
+                <button type="submit" class="btn-submit">
+                    Complete Registration <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
 
-    <img src="https://static.vecteezy.com/system/resources/previews/020/859/601/non_2x/employee-management-icon-design-free-vector.jpg">
+        </div>
 
-    <h5>Employee Management System</h5>
-
-    <div class="ms-auto">
-        <a class="me-3 text-decoration-none text-white" href="/view">Dashboard</a>
-        <a class="text-decoration-none text-white" href="/logout">Logout</a>
     </div>
-
 </div>
-
-
-</nav>
-
-<!-- 🔥 FLASH -->
-
-<div class="flash-box">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, msg in messages %}
-    <div class="alert alert-{{category}} alert-dismissible fade show">
-      {{ msg }}
-      <button class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  {% endfor %}
-{% endwith %}
-</div>
-
-<!-- FORM -->
-
-<div class="wrapper">
-
-<div class="form-card">
-
-
-<h3>Add Employee</h3>
-
-<form method="post">
-
-    <input type="text" class="form-control mb-3" name="ename" placeholder="Employee Name" required>
-
-    <input type="text" class="form-control mb-3" name="edept" placeholder="Department" required>
-
-    <input type="number" class="form-control mb-3" name="esalary" placeholder="Salary" required>
-
-    <input type="text" class="form-control mb-3" name="ephone" placeholder="Phone Number" required>
-
-    <button class="btn btn-custom w-100">Add Employee</button>
-
-</form>
-
-</div>
-
-</div>
-
-<!-- FOOTER -->
-
-<footer>
-    © 2026 Employee Management System
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+{% endblock %}

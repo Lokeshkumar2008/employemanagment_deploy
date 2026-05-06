@@ -1,154 +1,237 @@
-<!doctype html>
+{% extends "base.html" %}
 
-<html lang="en">
+{% block title %}Login{% endblock %}
 
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Login</title>
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-
+{% block extra_css %}
 <style>
+
+/* 🔥 FULL HEIGHT FIX (MAIN FIX FOR FOOTER GAP) */
+html, body {
+    height: 100%;
+}
+
 body {
-    margin: 0;
-    min-height: 100vh;
     display: flex;
     flex-direction: column;
-    font-family: 'Segoe UI', sans-serif;
-
-    background: 
-        linear-gradient(rgba(78,84,200,0.7), rgba(143,148,251,0.7)),
-        url("https://w0.peakpx.com/wallpaper/795/959/HD-wallpaper-best-web-development-company-in-lucknow-web-developer-web-design-web-application-web-development.jpg");
-
-    background-size: cover;
 }
 
-/* NAVBAR */
+/* MAIN SHOULD TAKE FULL SPACE */
+main {
+    flex: 1;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* REMOVE DEFAULT GAP */
+body {
+    margin: 0;
+    padding: 0;
+}
+
+/* REMOVE BOOTSTRAP GAP */
+.container,
+.container-fluid {
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* NAVBAR GAP FIX */
 .navbar {
-    background: rgba(255,255,255,0.9);
+    margin-bottom: 0 !important;
 }
 
-.navbar a {
-    color: #333;
+/* 🔥 WRAPPER */
+.auth-wrapper {
+    display: flex;
+    flex: 1;
+    min-height: calc(100vh - 76px);
 }
 
-/* FLASH */
-.flash-box {
-    position: fixed;
-    top: 70px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 350px;
-    z-index: 9999;
-}
-
-/* CARD */
-.login-card {
-    width: 360px;
-    margin: auto;
-    margin-top: 80px;
-    padding: 30px;
-    border-radius: 20px;
-
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(15px);
+/* LEFT SIDE */
+.left-side {
+    flex: 1;
+    background: linear-gradient(135deg,#4f46e5,#818cf8);
     color: white;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    padding: 60px;
 }
 
-.login-card input {
+.left-content {
+    max-width: 500px;
+}
+
+.left-content h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.left-content p {
+    opacity: 0.9;
+    margin-bottom: 30px;
+}
+
+.left-content ul {
+    padding-left: 20px;
+}
+
+/* RIGHT SIDE */
+.right-side {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    padding: 30px;
+}
+
+/* FORM BOX */
+.form-box {
     width: 100%;
-    padding: 12px;
+    max-width: 420px;
+}
+
+/* TITLE */
+.form-box h2 {
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.form-box p {
+    color: #6b7280;
+    margin-bottom: 25px;
+}
+
+/* INPUT */
+.input-box {
     margin-bottom: 15px;
+}
+
+.input-box input {
+    width: 100%;
+    padding: 13px;
     border-radius: 10px;
+    border: 2px solid #e5e7eb;
+    outline: none;
+    font-size: 14px;
+}
+
+.input-box input:focus {
+    border-color: #4f46e5;
 }
 
 /* BUTTON */
-.login-btn {
+.btn-submit {
     width: 100%;
-    padding: 12px;
+    padding: 14px;
+    border: none;
     border-radius: 10px;
-    background: linear-gradient(to right, #00c6ff, #0072ff);
+    background: linear-gradient(90deg,#4f46e5,#6366f1);
     color: white;
+    font-weight: bold;
+    margin-top: 10px;
 }
 
-/* FOOTER */
-footer {
-    margin-top: auto;
-    background: rgba(255,255,255,0.9);
-    text-align: center;
-    padding: 10px;
+/* LINKS */
+.auth-link {
+    text-decoration: none !important;
+    color: #4f46e5;
+    font-weight: 600;
 }
+
+.auth-link:hover {
+    text-decoration: none;
+    color: #4338ca;
+}
+
+/* 🔥 RESPONSIVE */
+@media (max-width: 992px) {
+    .auth-wrapper {
+        flex-direction: column;
+    }
+
+    .left-side {
+        display: none;
+    }
+
+    .right-side {
+        min-height: calc(100vh - 76px);
+        padding: 20px;
+    }
+
+    .form-box {
+        background: #fff;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+}
+/* GAP ABOVE FOOTER */
+main {
+    flex: 1;
+    padding-bottom: 40px;  /* 👈 gap control */
+}
+
 </style>
+{% endblock %}
 
-</head>
+{% block content %}
 
-<body>
+<div class="container-fluid p-0">
+    <div class="auth-wrapper">
 
-<!-- NAVBAR -->
+        <!-- LEFT -->
+        <div class="left-side">
+            <div class="left-content">
+                <h1>Welcome back.</h1>
+                <p>
+                    Login to manage employees, monitor performance,
+                    and control your system.
+                </p>
 
-<nav class="navbar navbar-expand-lg">
-    <div class="container-fluid">
+                <ul>
+                    <li>✔ Secure access</li>
+                    <li>✔ Real-time data</li>
+                    <li>✔ Employee management</li>
+                </ul>
+            </div>
+        </div>
 
+        <!-- RIGHT -->
+        <div class="right-side">
+            <div class="form-box">
 
-    <img src="https://static.vecteezy.com/system/resources/previews/020/859/601/non_2x/employee-management-icon-design-free-vector.jpg"
-        width="50">
+                <h2>Admin Login</h2>
+                <p>Enter your credentials</p>
 
-    <h4 class="ms-2">EMPLOYEE MANAGEMENT SYSTEM</h4>
+                <form method="POST" action="/login">
 
-    <div class="ms-auto">
-        <a class="me-3" href="/">Home</a>
-        <a class="me-3" href="/about">About</a>
-        <a href="/contact">Contact</a>
+                    <div class="input-box">
+                        <input type="text" name="username" placeholder="Username" required>
+                    </div>
+
+                    <div class="input-box">
+                        <input type="password" name="password" placeholder="Password" required>
+                    </div>
+
+                    <button type="submit" class="btn-submit">Login</button>
+
+                </form>
+
+                <p style="margin-top:15px;">
+                    No account?
+                    <a href="/register" class="auth-link">Register</a>
+                </p>
+
+                <p>
+                    <a href="/forgot" class="auth-link">Forgot Password</a>
+                </p>
+
+            </div>
+        </div>
+
     </div>
-
 </div>
 
-
-</nav>
-
-<!-- 🔥 FLASH -->
-
-<div class="flash-box">
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% for category, msg in messages %}
-    <div class="alert alert-{{category}} alert-dismissible fade show">
-      {{ msg }}
-      <button class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  {% endfor %}
-{% endwith %}
-</div>
-
-<!-- LOGIN -->
-
-<div class="login-card">
-    <h2>Login</h2>
-
-
-<form action="/login" method="POST">
-    <input type="text" name="username" placeholder="Enter Username" required>
-    <input type="password" name="password" placeholder="Enter Password" required>
-
-    <button class="login-btn">Login</button>
-</form>
-
-<div class="links mt-3">
-    <a href="/forgot">Forgot Password?</a><br><br>
-    <a href="/register">New Admin? Register</a><br>
-</div>
-
-
-</div>
-
-<!-- FOOTER -->
-
-<footer>
-    © 2026 Employee Management System
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-</body>
-</html>
+{% endblock %}
