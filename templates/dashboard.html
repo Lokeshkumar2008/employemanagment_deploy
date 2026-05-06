@@ -4,84 +4,94 @@
 
 {% block extra_css %}
 <style>
-
-/* DASHBOARD */
-.dashboard{
-    max-width:1100px;
-    margin:auto;
-}
-
-/* CARDS */
-.card-box{
-    border-radius:15px;
-    padding:20px;
-    color:white;
-    box-shadow:0 10px 25px rgba(0,0,0,0.1);
-}
-
-/* COLORS */
-.card1{ background:linear-gradient(135deg,#6366f1,#4f46e5); }
-.card2{ background:linear-gradient(135deg,#22c55e,#16a34a); }
-.card3{ background:linear-gradient(135deg,#f59e0b,#d97706); }
-.card4{ background:linear-gradient(135deg,#ef4444,#dc2626); }
-
-/* TITLE */
-.card-title{
-    font-size:14px;
-    opacity:0.8;
-}
-.card-value{
-    font-size:26px;
-    font-weight:600;
-}
-
-/* TABLE */
-.table-card{
-    margin-top:30px;
-    padding:20px;
-    border-radius:12px;
-    background:#fff;
-    box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-/* 🔍 SEARCH BAR */
-.search-box{
-    display:flex;
-    gap:10px;
-    margin-bottom:15px;
-}
-
-.search-box input{
-    border-radius:20px;
-}
-
-.search-box button{
-    border-radius:20px;
-}
-
-/* 🔥 BUTTON SAME SIZE */
-.btn-sm{
-    width:70px;
-    height:32px;
-    display:inline-flex;
-    align-items:center;
-    justify-content:center;
-    padding:0;
-}
-
-/* MOBILE */
-@media(max-width:768px){
-
-    .card-value{
-        font-size:20px;
+    /* DASHBOARD */
+    .dashboard {
+        max-width: 1100px;
+        margin: auto;
     }
 
-    .search-box{
-        flex-direction:column;
+    /* CARDS */
+    .card-box {
+        border-radius: 15px;
+        padding: 20px;
+        color: white;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     }
 
-}
+    /* COLORS */
+    .card1 {
+        background: linear-gradient(135deg, #6366f1, #4f46e5);
+    }
 
+    .card2 {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+    }
+
+    .card3 {
+        background: linear-gradient(135deg, #f59e0b, #d97706);
+    }
+
+    .card4 {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+    }
+
+    /* TITLE */
+    .card-title {
+        font-size: 14px;
+        opacity: 0.8;
+    }
+
+    .card-value {
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    /* TABLE */
+    .table-card {
+        margin-top: 30px;
+        padding: 20px;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    /* 🔍 SEARCH BAR */
+    .search-box {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .search-box input {
+        border-radius: 20px;
+    }
+
+    .search-box button {
+        border-radius: 20px;
+    }
+
+    /* 🔥 BUTTON SAME SIZE */
+    .btn-sm {
+        width: 70px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    /* MOBILE */
+    @media(max-width:768px) {
+
+        .card-value {
+            font-size: 20px;
+        }
+
+        .search-box {
+            flex-direction: column;
+        }
+
+    }
 </style>
 {% endblock %}
 
@@ -129,53 +139,51 @@
 
         <!-- 🔍 SEARCH BAR ADDED -->
         <form method="GET" action="/view" class="search-box">
-            <input type="text" name="search" class="form-control"
-                   placeholder="Search employee..."
-                   value="{{ request.args.get('search','') }}">
+            <input type="text" name="search" class="form-control" placeholder="Search employee..."
+                value="{{ request.args.get('search','') }}">
             <button class="btn btn-dark btn-sm">Search</button>
         </form>
 
         <div class="table-responsive">
-        <table class="table table-bordered text-center">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Department</th>
-            <th>Salary</th>
-            <th>Phone</th>
-            <th>Action</th>
-        </tr>
-    </thead>
+            <table class="table table-bordered text-center">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Salary</th>
+                        <th>Phone</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
 
-    <tbody>
-        {% if employees %}
-            {% for e in employees %}
-            <tr>
-                <td>{{ e[0] }}</td>
-                <td>{{ e[1] }}</td>
-                <td>{{ e[2] }}</td>
-                <td>{{ e[3] }}</td>
-                <td>{{ e[4] }}</td>
+                <tbody>
+                    {% if employees %}
+                    {% for e in employees %}
+                    <tr>
+                        <td>{{ e[0] }}</td>
+                        <td>{{ e[1] }}</td>
+                        <td>{{ e[2] }}</td>
+                        <td>${{ e[4] }}</td>
+                        <td>{{ e[5] }}</td>
 
-                <td>
-                    <a href="/edit/{{ e[0] }}" class="btn btn-success btn-sm">Edit</a>
+                        <td>
+                            <a href="/edit/{{ e[0] }}" class="btn btn-success btn-sm">Edit</a>
 
-                    <a href="/delete/{{ e[0] }}" 
-                       class="btn btn-danger btn-sm"
-                       onclick="return confirm('Delete this employee?')">
-                       Delete
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6">No Employees Found</td>
-            </tr>
-        {% endif %}
-    </tbody>
-</table>
+                            <a href="/delete/{{ e[0] }}" class="btn btn-danger btn-sm"
+                                onclick="return confirm('Delete this employee?')">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td colspan="6">No Employees Found</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
         </div>
 
     </div>
