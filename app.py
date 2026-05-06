@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, session, flash
 import random
-import mysql.connector
+import sqlite3
 import smtplib
 from email.message import EmailMessage
 from werkzeug.security import generate_password_hash
@@ -10,18 +10,15 @@ app.secret_key = "abc@123"
 
 # ---------------- DB CONNECTION ----------------
 def get_connection():
-    return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="Lokesh@123",
-        database="company"
-    )
+    conn = sqlite3.connect("company.db")
+    conn.row_factory = sqlite3.Row
+    return conn
 
 # ---------------- HOME ----------------
 @app.route('/')
 def home():
     return render_template('login.html')
-
+# ---------------- REGISTER ----------------
 # ---------------- REGISTER ----------------
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -35,7 +32,7 @@ def register():
         cur = con.cursor()
 
         cur.execute(
-            "INSERT INTO users (username, email, password, role) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)",
             (username, email, password, role)
         )
 
@@ -48,6 +45,7 @@ def register():
 
     return render_template('register.html')
 
+
 # ---------------- LOGIN ----------------
 @app.route('/login', methods=['GET', 'POST'])
 def Login():
@@ -59,7 +57,7 @@ def Login():
         cur = con.cursor()
 
         cur.execute(
-            "SELECT * FROM users WHERE username=%s AND password=%s",
+            "SELECT * FROM users WHERE username=? AND password=?",
             (username, password)
         )
 
@@ -74,11 +72,12 @@ def Login():
             return redirect('/view')
         else:
             flash("Invalid username or password", "danger")
-            return redirect('/login')   # 🔥 FIX HERE ALSO
+            return redirect('/login')
 
-    return render_template('login.html')   # 🔥 VERY IMPORTANT
+    return render_template('login.html')
 
-#----------------dashboard or view -----------------------
+
+# ---------------- DASHBOARD / VIEW ----------------
 @app.route('/view')
 def view():
 
@@ -93,7 +92,7 @@ def view():
 
     if search:
         cursor.execute(
-            "SELECT * FROM employee WHERE ename LIKE %s",
+            "SELECT * FROM employee WHERE ename LIKE ?",
             ('%' + search + '%',)
         )
     else:
@@ -101,7 +100,7 @@ def view():
 
     employees = cursor.fetchall()
 
-    # 🔢 COUNTS (keep these AFTER search or before — both fine)
+    # 🔢 COUNTS
     cursor.execute("SELECT COUNT(*) FROM employee")
     total_employees = cursor.fetchone()[0]
 
@@ -113,7 +112,7 @@ def view():
 
     cursor.execute("SELECT SUM(esalary) FROM employee")
     total_salary = cursor.fetchone()[0] or 0
-    
+
     conn.close()
 
     return render_template(
@@ -125,7 +124,7 @@ def view():
         total_salary=total_salary
     )
 # ---------------- ADD ----------------
-
+# ---------------- ADD EMPLOYEE ----------------
 @app.route('/add_employee', methods=['GET', 'POST'])
 def Add_employee():
     if "admin" not in session:
@@ -144,7 +143,7 @@ def Add_employee():
         cur = con.cursor()
 
         cur.execute(
-            "INSERT INTO employee (ename, edept, esalary, ephone) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO employee (ename, edept, esalary, ephone) VALUES (?, ?, ?, ?)",
             data
         )
 
@@ -156,6 +155,7 @@ def Add_employee():
         return redirect('/view')
 
     return render_template('add_employee.html')
+
 
 # ---------------- EDIT ----------------
 @app.route('/edit/<int:id>', methods=['GET', 'POST'])
@@ -178,8 +178,8 @@ def edit_employee(id):
 
         cur.execute("""
             UPDATE employee
-            SET ename=%s, edept=%s, esalary=%s, ephone=%s
-            WHERE eid=%s
+            SET ename=?, edept=?, esalary=?, ephone=?
+            WHERE eid=?
         """, data)
 
         con.commit()
@@ -189,14 +189,14 @@ def edit_employee(id):
         flash("Employee updated successfully!", "success")
         return redirect('/view')
 
-    cur.execute("SELECT * FROM employee WHERE eid=%s", (id,))
+    cur.execute("SELECT * FROM employee WHERE eid=?", (id,))
     emp = cur.fetchone()
 
     cur.close()
     con.close()
 
     return render_template('edit_employee.html', emp=emp)
-
+# ---------------- DELETE ----------------
 # ---------------- DELETE ----------------
 @app.route('/delete/<int:id>')
 def delete_employee(id):
@@ -207,7 +207,7 @@ def delete_employee(id):
     con = get_connection()
     cur = con.cursor()
 
-    cur.execute("DELETE FROM employee WHERE eid=%s", (id,))
+    cur.execute("DELETE FROM employee WHERE eid=?", (id,))
     con.commit()
 
     cur.close()
@@ -216,12 +216,14 @@ def delete_employee(id):
     flash("Employee deleted successfully!", "warning")
     return redirect('/view')
 
+
 # ---------------- LOGOUT ----------------
 @app.route('/logout')
 def Logout():
     session.clear()
     flash("Logged out successfully!", "info")
     return redirect('/')
+
 
 # ---------------- CONTACT ----------------
 @app.route('/contact', methods=['GET', 'POST'])
@@ -266,21 +268,18 @@ Reason: {reason}
 
 # ---------------- FORGOT PASSWORD ----------------
 otp_store = {}
-
+# ---------------- FORGOT PASSWORD ----------------
 @app.route('/forgot', methods=['GET', 'POST'])
 def forgot():
     if request.method == "POST":
         email = request.form["email"]
 
         con = get_connection()
-        cur = con.cursor(buffered=True)
+        cur = con.cursor()
 
-        cur.execute("SELECT * FROM users WHERE email=%s", (email,))
+        cur.execute("SELECT * FROM users WHERE email=?", (email,))
         user = cur.fetchone()
 
-        cur.close()
-        con.close()
-        user = cur.fetchone()
         cur.close()
         con.close()
 
@@ -308,6 +307,7 @@ def forgot():
 
     return render_template("forgotpassword.html")
 
+
 # ---------------- VERIFY ----------------
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
@@ -322,6 +322,7 @@ def verify():
 
     return render_template("verify.html")
 
+
 # ---------------- RESET ----------------
 @app.route('/reset', methods=['GET', 'POST'])
 def reset():
@@ -335,7 +336,7 @@ def reset():
         cur = con.cursor()
 
         cur.execute(
-            "UPDATE users SET password=%s WHERE email=%s",
+            "UPDATE users SET password=? WHERE email=?",
             (new_password, email)
         )
 
@@ -351,10 +352,12 @@ def reset():
 
     return render_template("reset.html")
 
+
 # ---------------- ABOUT ----------------
 @app.route('/about')
 def about():
     return render_template('about.html')
+
 
 # ---------------- RUN ----------------
 if __name__ == '__main__':
